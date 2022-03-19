@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\AffiliateRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -36,6 +38,16 @@ class Affiliate
      * @ORM\Column(type="datetime_immutable")
      */
     private $created_at;
+
+    /**
+     * @ORM\OneToMany(targetEntity=CategoryAffiliate::class, mappedBy="affiliate")
+     */
+    private $categoryAffiliates;
+
+    public function __construct()
+    {
+        $this->categoryAffiliates = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -86,6 +98,36 @@ class Affiliate
     public function setCreatedAt(\DateTimeImmutable $created_at): self
     {
         $this->created_at = $created_at;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, CategoryAffiliate>
+     */
+    public function getCategoryAffiliates(): Collection
+    {
+        return $this->categoryAffiliates;
+    }
+
+    public function addCategoryAffiliate(CategoryAffiliate $categoryAffiliate): self
+    {
+        if (!$this->categoryAffiliates->contains($categoryAffiliate)) {
+            $this->categoryAffiliates[] = $categoryAffiliate;
+            $categoryAffiliate->setAffiliate($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCategoryAffiliate(CategoryAffiliate $categoryAffiliate): self
+    {
+        if ($this->categoryAffiliates->removeElement($categoryAffiliate)) {
+            // set the owning side to null (unless already changed)
+            if ($categoryAffiliate->getAffiliate() === $this) {
+                $categoryAffiliate->setAffiliate(null);
+            }
+        }
 
         return $this;
     }

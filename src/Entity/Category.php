@@ -29,9 +29,15 @@ class Category
      */
     private $jobs;
 
+    /**
+     * @ORM\OneToMany(targetEntity=CategoryAffiliate::class, mappedBy="category")
+     */
+    private $categoryAffiliates;
+
     public function __construct()
     {
         $this->jobs = new ArrayCollection();
+        $this->categoryAffiliates = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -75,6 +81,36 @@ class Category
             // set the owning side to null (unless already changed)
             if ($job->getCategory() === $this) {
                 $job->setCategory(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, CategoryAffiliate>
+     */
+    public function getCategoryAffiliates(): Collection
+    {
+        return $this->categoryAffiliates;
+    }
+
+    public function addCategoryAffiliate(CategoryAffiliate $categoryAffiliate): self
+    {
+        if (!$this->categoryAffiliates->contains($categoryAffiliate)) {
+            $this->categoryAffiliates[] = $categoryAffiliate;
+            $categoryAffiliate->setCategory($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCategoryAffiliate(CategoryAffiliate $categoryAffiliate): self
+    {
+        if ($this->categoryAffiliates->removeElement($categoryAffiliate)) {
+            // set the owning side to null (unless already changed)
+            if ($categoryAffiliate->getCategory() === $this) {
+                $categoryAffiliate->setCategory(null);
             }
         }
 
