@@ -1,20 +1,57 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello JobController!{% endblock %}
+{% block title %}Job index{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+    <h1>Job index</h1>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Type</th>
+                <th>Company</th>
+                <th>Logo</th>
+                <th>Position</th>
+                <th>Location</th>
+                <th>Description</th>
+                <th>How_to_apply</th>
+                <th>Token</th>
+                <th>Is_public</th>
+                <th>Email</th>
+                <th>Expires_at</th>
+                <th>Created_at</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for job in jobs %}
+            <tr>
+                <td>{{ job.id }}</td>
+                <td>{{ job.type }}</td>
+                <td>{{ job.company }}</td>
+                <td>{{ job.logo }}</td>
+                <td>{{ job.position }}</td>
+                <td>{{ job.location }}</td>
+                <td>{{ job.description }}</td>
+                <td>{{ job.howToApply }}</td>
+                <td>{{ job.token }}</td>
+                <td>{{ job.isPublic ? 'Yes' : 'No' }}</td>
+                <td>{{ job.email }}</td>
+                <td>{{ job.expiresAt ? job.expiresAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ job.createdAt ? job.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_job_show', {'id': job.id}) }}">show</a>
+                    <a href="{{ path('app_job_edit', {'id': job.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="14">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ '/home/hamchin/dev/perso/jobeet/src/Controller/JobController.php'|file_link(0) }}">src/Controller/JobController.php</a></code></li>
-        <li>Your template at <code><a href="{{ '/home/hamchin/dev/perso/jobeet/templates/job/index.html.twig'|file_link(0) }}">templates/job/index.html.twig</a></code></li>
-    </ul>
-</div>
+    <a href="{{ path('app_job_new') }}">Create new</a>
 {% endblock %}
